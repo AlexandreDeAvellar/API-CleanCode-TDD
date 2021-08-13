@@ -1,6 +1,6 @@
 class AuthUsecase {
-  async  auth(email) {
-        if (!email) return null
+    async auth(email) {
+        if (!email) throw new Error()
     }
 }
 
