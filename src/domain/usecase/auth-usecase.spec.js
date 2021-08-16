@@ -1,6 +1,6 @@
 const { MissingParamError } = require('../../utils/errors/')
 
-class AuthUsecase {
+class AuthUseCase {
     constructor(LoadUserByEmailRepository) {
         this.LoadUserByEmailRepository = LoadUserByEmailRepository
     }
@@ -18,7 +18,7 @@ const makeSut = () => {
         }
     }
     const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
-    const sut = new AuthUsecase(loadUserByEmailRepositorySpy)
+    const sut = new AuthUseCase(loadUserByEmailRepositorySpy)
     return { sut, loadUserByEmailRepositorySpy }
 }
 
@@ -40,4 +40,6 @@ describe('Auth UseCase', () => {
         await sut.auth('any_email@mail.com', 'any_password')
         expect(loadUserByEmailRepositorySpy.email).toBe('any_email@mail.com')
     })
+
+
 })
