@@ -10,5 +10,6 @@ module.exports = class AuthUseCase {
         if (!this.LoadUserByEmailRepository.load) throw new InvalidParamError('loadUserByEmailRepository')
         const user = await this.LoadUserByEmailRepository.load(email)
         if (!user) return null
+        return null
     }
 }

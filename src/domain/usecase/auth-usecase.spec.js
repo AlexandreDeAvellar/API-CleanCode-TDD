@@ -7,9 +7,11 @@ const makeSut = () => {
     class LoadUserByEmailRepositorySpy {
         async load(email) {
             this.email = email
+            return this.user
         }
     }
     const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
+    loadUserByEmailRepositorySpy.user = {}
     const sut = new AuthUseCase(loadUserByEmailRepositorySpy)
     return { sut, loadUserByEmailRepositorySpy }
 }
@@ -45,9 +47,11 @@ describe('Auth UseCase', () => {
         expect(promise).rejects.toThrow(new InvalidParamError('loadUserByEmailRepository'))
     })
 
-    it('Should return null if LoadUserByEmailRepository returs null', async () => {
+    it('Should return null if an invalid email is provided', async () => {
         const { sut, loadUserByEmailRepositorySpy } = makeSut()
+        loadUserByEmailRepositorySpy.user = null
         const accessToken = await sut.auth('invalid_email@mail.com', 'any_password')
         expect(accessToken).toBeNull()
-    })
+    }) 
+
 })
