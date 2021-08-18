@@ -54,4 +54,9 @@ describe('Auth UseCase', () => {
         expect(accessToken).toBeNull()
     }) 
 
+    it('Should return null if an invalid password is provided', async () => {
+        const { sut } = makeSut()
+        const accessToken = await sut.auth('valid_email@mail.com', 'invalid_password')
+        expect(accessToken).toBeNull()
+    }) 
 })
