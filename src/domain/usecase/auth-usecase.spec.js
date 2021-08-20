@@ -18,15 +18,16 @@ const makeLoadUserByEmailRepositorySpy = () => {
             return this.user
         }
     }
-    return new LoadUserByEmailRepositorySpy()
+    const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
+    loadUserByEmailRepositorySpy.user = {
+        password: "hashed_password"
+    }
+    return loadUserByEmailRepositorySpy
 }
 
 const makeSut = () => {
     const encrypterSpy = makeEncrypterSpy()
     const loadUserByEmailRepositorySpy = makeLoadUserByEmailRepositorySpy()
-    loadUserByEmailRepositorySpy.user = {
-        password: "hashed_password"
-    }
     const sut = new AuthUseCase(loadUserByEmailRepositorySpy, encrypterSpy)
     return { sut, loadUserByEmailRepositorySpy, encrypterSpy }
 }
