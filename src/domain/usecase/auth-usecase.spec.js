@@ -11,15 +11,19 @@ const makeEncrypterSpy = () => {
     return new EncrypterSpy()
 }
 
-const makeSut = () => {
+const makeLoadUserByEmailRepositorySpy = () => {
     class LoadUserByEmailRepositorySpy {
         async load(email) {
             this.email = email
             return this.user
         }
     }
+    return new LoadUserByEmailRepositorySpy()
+}
+
+const makeSut = () => {
     const encrypterSpy = makeEncrypterSpy()
-    const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
+    const loadUserByEmailRepositorySpy = makeLoadUserByEmailRepositorySpy()
     loadUserByEmailRepositorySpy.user = {
         password: "hashed_password"
     }
