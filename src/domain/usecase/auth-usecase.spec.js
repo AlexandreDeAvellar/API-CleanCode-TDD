@@ -90,6 +90,20 @@ describe('Auth UseCase', () => {
         expect(promise).rejects.toThrow(new InvalidParamError('loadUserByEmailRepository'))
     })
 
+    it('Should throw if no encrypter is provided', async () => {
+        const LoadUserByEmailRepository = makeLoadUserByEmailRepositorySpy()
+        const sut = new AuthUseCase({ LoadUserByEmailRepository })
+        const promise = sut.auth('any_email@mail.com', 'any_password')
+        expect(promise).rejects.toThrow(new MissingParamError('encrypter'))
+    })
+
+    it('Should throw if no encrypter has no compare method', async () => {
+        const LoadUserByEmailRepository = makeLoadUserByEmailRepositorySpy()
+        const sut = new AuthUseCase({ LoadUserByEmailRepository, encrypter: {} })
+        const promise = sut.auth('any_email@mail.com', 'any_password')
+        expect(promise).rejects.toThrow(new InvalidParamError('encrypter'))
+    })
+
     it('Should return null if an invalid email is provided', async () => {
         const { sut, loadUserByEmailRepositorySpy } = makeSut()
         loadUserByEmailRepositorySpy.user = null
