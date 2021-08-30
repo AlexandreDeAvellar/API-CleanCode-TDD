@@ -12,6 +12,8 @@ module.exports = class AuthUseCase {
         if (!this.LoadUserByEmailRepository.load) throw new InvalidParamError('loadUserByEmailRepository')
         if (!this.encrypter) throw new MissingParamError('encrypter')
         if (!this.encrypter.compare) throw new InvalidParamError('encrypter')
+        if (!this.tokenGenerator) throw new MissingParamError('tokenGenerator')
+        if (!this.tokenGenerator.generate) throw new InvalidParamError('tokenGenerator')
         const user = await this.LoadUserByEmailRepository.load(email)
         if (!user) return null
         const isValid = await this.encrypter.compare(password, user.password)
