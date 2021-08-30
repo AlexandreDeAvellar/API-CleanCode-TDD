@@ -8,19 +8,12 @@ module.exports = class AuthUseCase {
     async auth(email, password) {
         if (!email) throw new MissingParamError('email')
         if (!password) throw new MissingParamError('password')
-        if (!this.LoadUserByEmailRepository) throw new MissingParamError('loadUserByEmailRepository')
-        if (!this.LoadUserByEmailRepository.load) throw new InvalidParamError('loadUserByEmailRepository')
-        if (!this.encrypter) throw new MissingParamError('encrypter')
-        if (!this.encrypter.compare) throw new InvalidParamError('encrypter')
-        if (!this.tokenGenerator) throw new MissingParamError('tokenGenerator')
-        if (!this.tokenGenerator.generate) throw new InvalidParamError('tokenGenerator')
         const user = await this.LoadUserByEmailRepository.load(email)
-        if (!user) return null
-        const isValid = await this.encrypter.compare(password, user.password)
-        if (!isValid) {
-            return null
+        const isValid = user && await this.encrypter.compare(password, user.password)
+        if (isValid) {
+            const accessToken = await this.tokenGenerator.generate(user.id)
+            return accessToken
         }
-        const accessToken = await this.tokenGenerator.generate(user.id)
-        return accessToken
+        return null
     }
 }
