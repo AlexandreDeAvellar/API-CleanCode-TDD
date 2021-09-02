@@ -87,12 +87,13 @@ const makeSut = () => {
         encrypter: encrypterSpy,
         tokenGenerator: tokenGeneratorSpy,
     })
-    return { 
-        sut, 
-        loadUserByEmailRepositorySpy, 
+    return {
+        sut,
+        loadUserByEmailRepositorySpy,
         updateAccessTokenRepositorySpy,
-        encrypterSpy, 
-        tokenGeneratorSpy }
+        encrypterSpy,
+        tokenGeneratorSpy
+    }
 }
 
 describe('Auth UseCase', () => {
@@ -118,6 +119,7 @@ describe('Auth UseCase', () => {
         const invalid = {}
         const loadUserByEmailRepository = makeLoadUserByEmailRepositorySpy()
         const encrypter = makeEncrypterSpy()
+        const tokenGenerator = makeTokenGeneratorSpy()
         const suts = [].concat(
             new AuthUseCase(),
             new AuthUseCase(invalid),
@@ -126,6 +128,8 @@ describe('Auth UseCase', () => {
             new AuthUseCase({ loadUserByEmailRepository, encrypter: invalid }),
             new AuthUseCase({ loadUserByEmailRepository, encrypter }),
             new AuthUseCase({ loadUserByEmailRepository, encrypter, tokenGenerator: invalid }),
+            new AuthUseCase({ loadUserByEmailRepository, encrypter, tokenGenerator }),
+            new AuthUseCase({ loadUserByEmailRepository, encrypter, tokenGenerator, updateAccessTokenRepository: invalid }),
         )
         suts.map(sut => {
             const promise = sut.auth('any_email@mail.com', 'any_password')
