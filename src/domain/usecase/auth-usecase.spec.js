@@ -33,6 +33,7 @@ const makeTokenGeneratorSpy = () => {
     tokenGeneratorSpy.accessToken = 'any_token'
     return tokenGeneratorSpy
 }
+
 const makeTokenGeneratorWithError = () => {
     class TokenGenerator {
         async generate() {
@@ -40,6 +41,15 @@ const makeTokenGeneratorWithError = () => {
         }
     }
     return new TokenGenerator()
+}
+
+const makeUpdateAccessTokenRepositoryWithError = () => {
+    class UpdateAccessTokenRepositoryWithError {
+        async update() {
+            throw new Error()
+        }
+    }
+    return new UpdateAccessTokenRepositoryWithError()
 }
 
 const makeLoadUserByEmailRepositorySpy = () => {
@@ -141,10 +151,13 @@ describe('Auth UseCase', () => {
         const invalid = {}
         const loadUserByEmailRepository = makeLoadUserByEmailRepositorySpy()
         const encrypter = makeEncrypterSpy()
+        const tokenGenerator = makeTokenGeneratorSpy()
         const suts = [].concat(
             new AuthUseCase({ loadUserByEmailRepository: makeLoadUserByEmailRepositoryWithError() }),
             new AuthUseCase({ loadUserByEmailRepository, encrypter: makeEncrypterWithError() }),
             new AuthUseCase({ loadUserByEmailRepository, encrypter, tokenGenerator: makeTokenGeneratorWithError() }),
+            new AuthUseCase({ loadUserByEmailRepository, encrypter, tokenGenerator }),
+            new AuthUseCase({ loadUserByEmailRepository, encrypter, tokenGenerator, updateAccessTokenRepository: makeUpdateAccessTokenRepositoryWithError()}),
         )
         suts.map(sut => {
             const promise = sut.auth('any_email@mail.com', 'any_password')
